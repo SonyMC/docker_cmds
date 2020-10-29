@@ -1,0 +1,322 @@
+(1) docker --version
+(2) docker run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+    docker container run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+    docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+		//docker run --publish  localhost port : container port  image:release	-> command                               //downloads repository from   docker registry and runs image from docker hob which is a registory of                       //repostories.Static version of repository in our local machine is called an image. Once it runs it 
+                // becomes a container
+(3) View repository : https://hub.docker.com/r/in28min/hello-world-python
+
+(4) docker run -d -p 5000:5000 in28min/hello-world-nodejs:0.0.1.RELEASE
+	// launch containner in detached mode 
+        // i.e even if we exit teh command prompt the container would remain running
+
+(5) docker logs 04e52ff9270f5810eefe1f77222852dc1461c22440d4ecd6228b5c38f09d838e
+	// show logs based on container id
+	// sufficient to give part of the container id 
+(6)docker logs -f c2ba 
+	// follow logs for a particular container . It would tie teh terminal to the log for that container
+
+(7) docker images  or docker image ls
+	// would show all images with details
+
+(8) docker container ls
+	// would show all container details which are runnign at that particular point of time 
+
+
+(7) docker container ls -a
+	// would show all container details which are runnign and are stopped
+
+(8)docker container stop f708b7ee1a8b
+   docker container stop flamboyant_wescoff
+	// stops teh container 
+
+(9) docker pull mysql
+	// will pull the image with latest tag for mysql
+	// will not run the image nut only pull the image and make it avialable in local repo
+
+
+(10) docker search mysql
+	// will show list of all images for mysql
+	// wil show which isjas offical set us OK. Use such images which are officially ok.
+
+(11) docker image history in28min/hello-world-java:0.0.1.RELEASE
+	// will show different layers for that image ( i.e. os layer,sw layer, application layer etc.)
+
+(12) docker image history 100229ba687e
+	// show different layers using image id 
+
+(13) docker image inspect 100229ba687e
+	// will show all details for that image including history(layer)
+
+
+(13) docker image remove mysql
+     docker image rm mysql
+	// will remove mysql from local hello
+	// will not remove if associated with a container. In such case, first remove container and then remove image
+
+(14) docker image remove in28min/hello-world-java:0.0.1.RELEASE
+	// have to include tags to emove if it has been containerised
+	// will not remove if associated with a container. In such case, first remove container and then remove image
+
+(15)docker container rm 3e657ae9bd16
+	// remove a container
+
+(16)docker container pause 832
+	// container will not serve any request. The browser sending request will hang and time out
+(7)docker container unpause 832
+	// container will be unpaused
+
+(18)docker container stop 832
+	// stop the container 
+
+(19) docker container kill 832
+	// difference between kill and stop is that the later is more graseful and takes time in shuttimg down properly.
+
+(20) docker container inspect ff521fa58db3
+	// inspect the cotnainer 
+
+(21)docker container prune
+	// will remove all stopped containers
+
+(22) docker system
+	// will show options to be used with system 
+
+(23) docker system df
+	// show disk usage , no. of cotnainers, active state etc.
+
+(24) docker system events
+	// show events with containers 
+
+(25) docker system prune -a
+WARNING! This will remove:
+  - all stopped containers
+  - all networks not used by at least one container
+  - all images without at least one container associated to them
+  - all build cache
+
+
+(26) docker stats 9009722eac4d
+	// show stats about that container such as cpu usage etc.
+
+
+(27) docker container run -p 5000:5000 -d -m 512m in28min/hello-world-java:0.0.1.RELEASE
+	//start a container with a only 512mb of memeory 
+
+(27) docker container run -p 5000:5000 -d -m 512m --cpu-quota=50000  in28min/hello-world-java:0.0.1.RELEASE
+	//start a container with max. of 512mb of memeory &  max. cpu usage of 50 %( here 100,000 means full CPU usage)
+
+(28) docker build -t in28min/hello-world-python:0.0.2.RELEASE .
+    docker build -t mailsonymathew/hello-world-python:0.0.3.RELEASE .
+    docker build -t mailsonymathew/hello-world-nodejs:0.0.1.RELEASE .
+    docker build -t mailsonymathew/hello-world-java:0.0.1.RELEASE .	
+    docker build -t mailsonymathew/hello-world-nodejs:0.0.2.RELEASE .
+    docker build -t mailsonymathew/hello-world-python:0.0.4.RELEASE .
+    docker build -t mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE .	
+    docker build -t mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE .	
+	# build docker image
+        # -t -> is used tospecifyteh tag for the repository. Here this is in28min/hello-world-python:0.0.2.RELEASE
+        # '.' at teh end is imports and is the build context. Here we are saying use the current directory for build context as specified by the dot. Else we have to spcify teh full path of where the build direcltyr is.
+
+
+(29) docker login
+	# login to docker hub
+
+(31) docker push mailsonymathew/hello-world-python:0.0.4.RELEASE
+     docker push mailsonymathew/hello-world-nodejs:0.0.2.RELEASE
+     docker push mailsonymathew/hello-world-java:0.0.1.RELEASE
+     docker push mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE
+     docker push mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+	# push the image to docker hub ( remeber thsi si public domain and anyone can use it)
+	# you can only push images tagged with your docker id 
+
+(32) to view repositopry in docker hub online -> go to https://hub.docker.com/repository/docker/mailsonymathew/hello-world-python
+
+(33) docker run -d -p 5001:5000 mailsonymathew/hello-world-nodejs:0.0.1.RELEASE ping google.com
+    docker run -d -p 5000:5000 mailsonymathew/hello-world-java:0.0.1.RELEASE ping google.com
+	-> demo of difference btwn cmd and entry point in docker file. So if we append 'ping google.com' at end, if docker uses a command line it will tale preceedence over anthing typed before. But not so for entry point which is safer.
+	Hover command can be used if we for e.g want to use a cmd1.txt file at the end of teh command and which we can keep changing.For static cases hower, use entry point.
+
+(34) docker run -d -p 8000:8000 --name=currency-exchange mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE
+     docker run -d -p 8100:8100 --name=currency-conversion mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+     # here --name means we are specifiying the name of the name of the container
+
+(35)docker container rm currency-exchange
+	#Remove the container from local repo
+
+(36)docker network ls
+	#Will show all docker realted networks
+        # Bridge netwrok - is teh default networkign mode in docker 
+	# Containers preset in default bridge n/w cannot directly talk to each other using localhost
+	# Another optionis to use the host n/w which we will doscuss further blow.
+
+(37)docker network inspect bridge
+	# Inspect the bridge network
+
+(37)docker stop e345
+	# Shortcut for container stop
+
+(38)docker run -d -p 8100:8100 --env CURRENCY_EXCHANGE_SERVICE_HOST=http://currency-exchange --name=currency-conversion --link currency-exchange mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+	# Thsi command is used to enable services to talk to each other within the bridge newtork by specifying environment of connector service and link of connector container.
+	# This command will run teh currency conversion service create a link between within the currency conversion to the currency exchange service.
+	# The --env CURRENCY_EXCHANGE_SERVICE_HOST value specifies the container where the currency exchange service is found. Remeber that here we have to use teh container name to which we want to link and teh environment variable name should be the same as specified in the code . This env name and service name is specified as feign client in CurrencyExchangeServiceProxy.java in teh CurrencyExchange project as follows:
+	@FeignClient(name = "currency-exchange", url = "${CURRENCY_EXCHANGE_SERVICE_HOST:http://localhost}:8000")
+       # Hence in above command we are linking this feign command to set the environment variable 
+       # the --link command specifies teh container to which the currency conversion service is linked. 
+       # Note : link is not the recommnede dopton. Refer below commands to see recommeneded approaach.
+
+(39) Host network:
+	# Instead of bridge netwrk we can use host n/w
+	# However,  The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for       Windows Server. Refer -> https://docs.docker.com/network/host/
+	# Hence this is a good option only for Linux based servers and cloud.
+	# For our windows server, we will need to use a custom n/w
+
+(40) USing a custom n/w:
+	(1) #create cutom n/w called currency-network:
+		docker network create currency-network
+			
+	(2) #launch currency-exchange in the new network
+		docker run -d -p 8000:8000 --name=currency-exchange --network=currency-network mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE
+	
+	(3)# launch currency-conversion in new network without specifying the link
+ 	docker run -d -p 8100:8100 --env CURRENCY_EXCHANGE_SERVICE_HOST=http://currency-exchange --name=currency-conversion --network=currency-network 	mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+
+(41) docker-compose --version
+	# Version of docker compose 
+
+(42)docker-compose up
+	# Create a docker-compose.yml file. Note - the name of the file must be 'docker-compose'.
+	# Go to teh direcoty where this .yml fiel is available and execute this command. 
+
+(43)docker-compose up -d 
+	# Execute yml in detached mode.
+
+		
+(44)docker-compose down
+	# Will bringdown containers specified in yml and also the custom n/w specified.
+
+(45)docker-compose events
+	# Will show all events being trigerred as part of executign teh yml file.
+
+(46)docker-compose config
+	# Will show the configurations specified in yml file.
+	# Can also be used to d a review fo the yml fiel as it will highlight nay erros in the yml file.
+
+
+(47)docker-compose images
+	# Will show the images being used.
+
+(48)docker-compose ps
+	# Will show the containers being used.
+
+
+(49)docker-compose top
+	# Will show the top proceses running.
+
+(50)docker-compose pause
+	# Will pause all containers.
+
+(51)docker-compose unpause
+	# Will unpause all paused containers.
+
+(50)docker-compose stop
+	# Will stop all containers.
+
+(51)docker-compose kill
+	# Will kill all containers.
+
+docker --version
+docker run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+docker run -p 5000:5000 in28min/hello-world-java:0.0.1.RELEASE
+docker run -p 5000:5000 in28min/hello-world-nodejs:0.0.1.RELEASE
+docker run -d -p 5000:5000 in28min/hello-world-nodejs:0.0.1.RELEASE
+docker run -d -p 5001:5000 in28min/hello-world-python:0.0.1.RELEASE
+docker logs 04e52ff9270f5810eefe1f77222852dc1461c22440d4ecd6228b5c38f09d838e
+docker logs c2ba
+docker images
+docker container ls
+docker container ls -a
+docker container stop f708b7ee1a8b
+docker run -d -p 5001:8080 in28min/hello-world-rest-api:0.0.1.RELEASE
+docker pull mysql
+docker search mysql
+docker image history in28min/hello-world-java:0.0.1.RELEASE
+docker image history 100229ba687e
+docker image inspect 100229ba687e
+docker image remove mysql
+docker image remove in28min/hello-world-java:0.0.1.RELEASE
+docker container rm 3e657ae9bd16
+docker container ls -a
+docker container pause 832
+docker container unpause 832
+docker container stop 832
+docker container inspect ff521fa58db3
+docker container prune
+docker system
+docker system df
+docker system info
+docker system prune -a
+docker top 9009722eac4d
+docker stats 9009722eac4d
+docker container run -p 5000:5000 -d -m 512m in28min/hello-world-java:0.0.1.RELEASE
+docker container run -p 5000:5000 -d -m 512m --cpu-quota=50000  in28min/hello-world-java:0.0.1.RELEASE
+docker system events
+ 
+docker container stats 4faca1ea914e3e4587d1d790948ec6cb8fa34f26e900c12632fd64d4722fd59a
+docker stats 42f170966ce613d2a16d7404495af7b3295e01aeb9142e1fa1762bbdc581f502
+ 
+cd /in28Minutes/git/devops-master-class/projects/hello-world/hello-world-python 
+docker build -t in28min/hello-world-python:0.0.2.RELEASE . 
+docker run -p 5000:5000 -d in28min/hello-world-python:0.0.2.RELEASE
+docker history e66dc383f7a0
+docker push in28min/hello-world-python:0.0.2.RELEASE
+ 
+cd ../hello-world-nodejs/
+docker build -t in28min/hello-world-nodejs:0.0.2.RELEASE . 
+docker container run -d -p 5000:5000 in28min/hello-world-nodejs:0.0.2.RELEASE
+docker push in28min/hello-world-nodejs:0.0.2.RELEASE
+ 
+cd ../hello-world-java/
+docker build -t in28min/hello-world-java:0.0.2.RELEASE . 
+docker run -d -p 5000:5000 in28min/hello-world-java:0.0.2.RELEASE
+docker push in28min/hello-world-java:0.0.2.RELEASE
+ 
+docker run -d -p 5001:5000 in28min/hello-world-nodejs:0.0.3.RELEASE ping google.com
+ 
+ 
+docker run -d -p 8000:8000 --name=currency-exchange in28min/currency-exchange:0.0.1-RELEASE
+docker run -d -p 8100:8100 --name=currency-conversion in28min/currency-conversion:0.0.1-RELEASE
+ 
+docker network ls
+docker network inspect bridge
+ 
+docker run -d -p 8100:8100 --env CURRENCY_EXCHANGE_SERVICE_HOST=http://currency-exchange --name=currency-conversion --link currency-exchange in28min/currency-conversion:0.0.1-RELEASE
+ 
+docker network create currency-network
+docker container stop currency-exchange
+docker container stop currency-conversion
+docker run -d -p 8000:8000 --name=currency-exchange --network=currency-network in28min/currency-exchange:0.0.1-RELEASE
+docker run -d -p 8100:8100 --env CURRENCY_EXCHANGE_SERVICE_HOST=http://currency-exchange --name=currency-conversion --network=currency-network in28min/currency-conversion:0.0.1-RELEASE
+ 
+docker-compose --version
+cd ../../microservices/
+docker-compose up
+docker-compose up -d
+docker container ls
+docker network ls
+docker network inspect microservices_currency-compose-network
+docker-compose down
+docker container ls -a
+docker system prune -a
+docker-compose config
+docker-compose images
+docker-compose ps
+docker-compose top
+ 
+docker build -t in28min/hello-world-java:0.0.1.RELEASE .
+docker push in28min/hello-world-java:0.0.1.RELEASE
+ 
+docker build -t in28min/hello-world-python:0.0.1.RELEASE .
+docker push in28min/hello-world-python:0.0.1.RELEASE
+ 
+docker build -t in28min/hello-world-nodejs:0.0.1.RELEASE .
+docker push in28min/hello-world-nodejs:0.0.1.RELEASE
