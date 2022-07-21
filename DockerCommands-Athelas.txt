@@ -1,3 +1,6 @@
+Projects folder:
+D:\OneDrive\Study\DevOps\Docker commands\projects
+
 (1) docker --version
 (2) docker run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
     docker run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
