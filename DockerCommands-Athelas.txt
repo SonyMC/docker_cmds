@@ -1,8 +1,10 @@
 (1) docker --version
 (2) docker run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+    docker run -p 5000:5000 -d in28min/todo-rest-api-h2:1.0.0.RELEASE
+    docker run -p 5000:5000 -d mailsonymathew/06-todo-rest-api-h2-containerized:1.0.0.RELEASE   -> localhost:5001/hello-world-bean
     docker container run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
     docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
-		//docker run --publish  localhost port : container port  image:release	-> command                               
+		//docker run --publish  {host port} : {container port}  image:release	-> command                               
                //downloads repository from   docker registry and runs image from docker hub which is a registory of  repostories.
                 //Static version of repository in our local machine is called an image.  Once it runs it becomes a container
 (3) View repository : https://hub.docker.com/r/in28min/hello-world-python
@@ -85,7 +87,7 @@
 (23) docker system df
 	// show disk usage , no. of cotnainers, active state etc.
 
-(24) docker system events
+(24) docker events
 	// show events with containers 
 
 (25) docker system prune -a
@@ -224,6 +226,61 @@ WARNING! This will remove:
 
 (51)docker-compose kill
 	# Will kill all containers.
+
+(52) Add a new tag t0 an image:
+	# docker tag -p 5000:5000 -d mailsonymathew/06-todo-rest-api-h2-containerized:1.0.0.RELEASE mailsonymathew/06-todo-rest-api-h2-containerized:LATEST
+
+(53) Restart container on Docker desktop restart:
+	#docker run -p 5000:5000 -d --restart=always in28min/todo-rest-api-h2:1.0.0.RELEASE
+	- default value of restart is no
+
+(54) Top proces in a container 
+	#docker top efg
+
+(55) Launch Zipkin server
+	# docker run -p 9411:9411 openzipkin/zipkin:2.23
+	- launch in browser : localhost:9411 
+
+(56) To create image:
+	(1)  in pom.xml add teh following configuration to maven-plugin:
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+<!--  maven plugin is also used to create an image for our container -->				
+				<configuration>
+					<image>
+						<name>mailsonymathew/mmv2-${project.artifactId}:${project.version}</name>
+					</image>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+				</configuration>				
+			</plugin>
+		</plugins>
+	</build>
+
+	
+	(2) Right click on projct -> Run as-> Maven Build:
+		- Goals = spring-boot:build-image -DskipTests  -> skip tests saves time
+				OR
+		  Goals =  spring-boot:build-image   -> use this in projects
+   
+	(3) Alternative to Second step:
+		- cmd prompt-> cd to project folder -> mvn spring-boot:build-image
+
+	(4) Run container for currency-exchange: 
+		- image name is 'docker.io/mailsonymathew/mmv2-currency-exchange-service-v2:0.0.1-SNAPSHOT' as can be seen in eclipse console after image build		
+		# cmd: docker run -p 8000:8000 docker.io/mailsonymathew/mmv2-currency-exchange-service-v2:0.0.1-SNAPSHOT
+
+(57) Runnign using Docker compose:
+	- Create docker.copose.yaml in D:\OneDrive\Study\Java\Eclipse2020-03WorkplaceOct2020\currency-exchange-service-v3
+	- open cmd pompt and cd inot folder:
+		- # cmd: docker-compose up
+
+
+(58) Stop all containers:
+	- Open powershell in admin mode:
+		- cmd: docker container stop $(docker container list -q)		
 
 docker --version
 docker run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE

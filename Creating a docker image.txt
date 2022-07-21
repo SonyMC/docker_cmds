@@ -1,0 +1,72 @@
+(1) Option 1 : From Sprign boot to create image:
+	-   in pom.xml add teh following configuration to maven-plugin:
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+<!--  maven plugin is also used to create an image for our container -->				
+				<configuration>
+					<image>
+						<name>mailsonymathew/mmv2-${project.artifactId}:${project.version}</name>
+					</image>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+				</configuration>				
+			</plugin>
+		</plugins>
+	</build>
+
+	
+	(a) Right click on project -> Run as-> Maven Build(2nd Option):
+		- Goals = spring-boot:build-image -DskipTests  -> skip tests saves time
+				OR
+		  Goals =  spring-boot:build-image   -> use this in projects
+   
+	(b) Alternative to Second step:
+		- cmd prompt-> cd to project folder -> mvn spring-boot:build-image
+
+
+(2) Option 2: Use Spotify Docker plugin 
+-   in pom.xml add teh following configuration to maven-plugin:
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<!-- Docker -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+							<!-- <goal>push</goal> -->
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>mailsonymathew/${project.name}</repository>
+					<tag>${project.version}</tag>
+					<skipDockerInfo>true</skipDockerInfo>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
+	(a) Right click on project -> Run as-> Maven Build(2nd option):
+		- Goals = clean package
+
+   
+	(b) Alternative to Second step:
+		- cmd prompt-> cd to project folder -> mvn clean package
+
+(3) Option 3 : From docker file:
+	- Create docker file 
+	- execute command : docker build -t reponame/imagename:tag .
+		E.g.: docker build -t mailsonymathew/microservice-v1:0.0.1.RELEASE .
+
