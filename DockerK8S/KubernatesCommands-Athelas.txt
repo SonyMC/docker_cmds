@@ -1,0 +1,438 @@
+(1) Connect to a cluster:
+gcloud container clusters get-credentials sonymathew-1 --zone asia-northeast1-a --project nifty-passkey-290311
+
+(2) Run commands against this cluster 
+kubectl - Kube controller 
+
+(3) Kube controller version
+kubectl version 
+
+(4) Deploy application to kebernetes cluster:
+kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+kubectl create deployment hello-world-rest-api --image=mailsonymathew/hello-world-java:0.0.1.RELEASE
+
+(5) Expose deployment to outer world
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+
+(6) Get events 
+	- kubectl get events
+	- kubectl get ev
+
+(7) Get pods
+	- kubectl get pods
+	- kubectl get po
+
+(8) Get replica sets 
+	- kubectl get replicaset
+	- kubectl get rs
+
+(9) Get deployment
+kubectl get deployment 
+
+(10) Get service
+	- kubectl get service
+	- kubectl get svc
+
+(11) Delete pod, events, service, deployments 
+kubectl delete pod/event/service/deployment name 
+
+(12) Get pods with n/w,container  info
+	kubectl get pods -o wide
+	# Note :
+		-  A node can contain multiple podes. 
+		- Pod is a collection of containers
+		 - Each pod can contain multiple containers.
+		- Pod is the smallest deployable unit in a node ( not container as without a pod we cannot have a container)
+		- Containers within the same pod can talk to each other.
+
+
+(13) Explain pods
+	kubectl explain pods
+
+
+(14) Get detailed info on a certain pod 
+	kubectl get pods -> list all pods , copy name of pod 
+	kubectl describe pod podname
+
+(15) Get replica sets
+	- REplica sets ensure that a specified number of pod replicas are running at ay given time
+	kubectl get replicaset
+	kubectl get replicasets
+	kubectl get rs
+	# Note : Replica sets monitors pods and if there are lesset number of pods than required, it automatically created pods.
+
+(16) Increase number of pods (i.e tell replicaset to scale to a particular number of pods) 
+		- kubectl scale deployment hello-world-rest-api --replicas=3
+	
+
+(16) Sort events by timestamp 
+	- kubectl get events --sort-by=.metadata.creationTimestamp	
+
+
+(17) Explain replicaset 
+	- kubectl explain replicaset
+
+(18) More detils including images in the replicaset 
+	- kubectl get rs -o wide
+
+(19) Describe pod 
+	- kubectl describe pod name
+
+(20) Deploy new image version of hello-world-api to pod  - Error scenario 
+	-kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+	#Notes:
+		(1)the app name can be found via 'kubectl get rs -o wide' 
+		(2) first 'hello-world-rest-api' is the deployment app name
+		(3) second 'hello-world-rest-api' is the container 
+		(4) '=DUMMY_IMAGE:TEST' is teh name of the new version of the image we want to deploy to the pod
+		(5) Note : DUMMY_IMAGE:TEST is an error image path. However teh application wont go down. If we get the replica sets (kubectl get rs -o wide) we can see an image has been created with name DUMMY_IMAGE:TEST. However number of pods in ready status is 0 for it. Meaning it cannot be deplyed. 
+		(6) The application however contains runnign with the available correct timage.
+		(7) If we get teh pods ( kubectl get pods) , we can see one pod with status as 'InvalidImageName'
+
+
+
+(21) Deploy new image version of hello-world-api to pod  - Correct scenario
+	-kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+
+(22) Get statuses of all manager node components 
+
+	- kubectl get componentstatuses
+
+(23)Login to google cloud:
+	- gcloud auth login
+
+(24)Change project in gcloud:
+	- gcloud config set project PROJECT_ID
+
+(25)Version of kubectl
+	- - kubectl version --client
+	- kubectl version --client
+	- if kubectl is connected to gcp ( see below) , it will show both client and server version. Else it wil show only client version.
+
+(26)Connecting to kubectl from gcp:
+	- go into cluster 
+	- select connect option 
+	- copy-paste the command shown in cmd
+
+(27) Rollout history of kubectl
+	- kubectl rollout history deployment hello-world-rest-api
+
+(28) Deploy new image version of hello-world-api to pod with a change-cause message which will contain the exact message executed
+	-kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.3.RELEASE --record=true
+	- ensure google cloud shell is connected 
+
+
+(29) Using curl command in gcp:
+	- get the endpoint from Services & ingress and type the following in the google command prompt
+		- curl http://35.200.124.198:8080/hello-world
+
+
+(30) Rolling back to a previous revision:
+	- kubectl rollout undo deployment hello-world-rest-api --to-revision=1
+
+
+(31) Pause a deployment 
+	-  kubectl rollout pause deployment hello-world-rest-api
+
+
+(32) Unpause a deployment 
+	-  kubectl rollout unpause deployment hello-world-rest-api
+
+
+(33) get logs for a specific pod 
+	- kubectl logs podname
+
+
+(34) follow logs fro a specific pod 
+	- kubectl logs -f podname
+
+(35) get deployment 
+	- kubectl get deployment deploymant-name
+
+(36) get deployment  in yaml format
+	- kubectl get deployment deploymant-name -o yaml 
+	E.g kubectl get deployment hello-world-rest-api -o yaml
+
+
+(37) get and save deployment  in yaml format
+	-  kubectl get deployment deploymant-name -o yaml >> deployment.yaml
+
+
+(37) get and save service details  in yaml format
+	- kubectl get service deploymant-name -o yaml > deployment.yaml
+
+
+(37) Applying specs specified in a yaml file 
+	- kubectl apply -f deployment.yaml
+
+(38) get all details of pods, service, deployments , replicasets
+	- kubectl get all 
+	- kubectl get all -o wide 
+	
+
+
+(39) delete all pods, service, deployments , replicasets etc. using a single label ( instead of deelting one by one) 
+	- get label using -o wide command 
+	- label will be under selector column 
+	- kubectl delete all -l labelname ( E.g. kubectl delete all -l app=hello-world-rest-api)
+
+
+(40) Watch the service 
+	- kubectl get svc     --watch
+	- kubectl get service --watch
+
+(41)Testing the service / gettign the external IP 
+	- once we run 'kubectl get service --watch' we will get teh external ip
+	- use teh external ip to test teh service 
+	- E.g External ip: 34.84.244.233
+	- Service name in browser : http://34.84.244.233:8080/hello-world
+
+
+(42)Watching the service from google cloud shell:
+	- watch curl http://34.84.244.233:8080/hello-world
+	- will show latest service stats every 2 seconds
+
+(43)Show difference with exosting deployment in kubectl
+	- kubectl diff -f deployment.yaml
+	- Note: This command needs diff util to be installed in windows. 
+
+
+(44)Apply changes to deployment.yaml
+	- kubectl apply -f deployment.yaml
+	- kubectl apply -f ../currency-conversion/deployment.yaml    ( Note : We care specifiying path if .yaml file in thsi deploy command).
+	-- ensure google cloud shell is connected 
+
+(45) Delete all related to a deployment 
+	- kubectl delete all -l app=hello-world-rest-api
+	- above command wil ldeelte everything(pods. service, deployments) with a label of app=hello-world-rest-api
+
+
+(46) Try to deploy a replica set 
+	- kubectl apply -f replicaSet.yaml
+	- Note : though thsi will work, it willn tpick up any new revisions. All replica set cares baout is that the required no. of pods are available. That is why we require a deployment (i.e. kind tag in yaml falg needs to eb set tp 'Deploymnet' instead of 'ReplicaSet'
+	- Usign deployment instead of replicaset to deply will nesure that for each release there is a replica set.
+	- Only way to force the replicaset to pick up teh new version, is to deelte the existing pods which will then ensure that the new pods created pick up the latest version.
+
+
+(47) Delete a deployment 
+	- kubectl delete deployment hello-world-rest-api
+ 
+
+(48) get all namespaces from all pods 
+	- kubectl get pods --all-namespaces
+
+
+(49) get namespaces relevant to a certain api  
+	- kubectl get pods --all-namespaces app=hello-world-rest-api
+
+
+(50) get namespaces relevant to a certain all label   
+	- kubectl get pods --all-namespaces -l app=hello-world-rest-api
+
+
+(51)get all namespaces from all services 
+	- kubectl get services --all-namespaces
+
+(52)sort namepsaces by type  
+	- kubectl get services --all-namespaces --sort-by=.spec.type
+	- .spec.type -> go to deployment.yaml and find 'type' under 'spec'
+	- Note : we can sort by what we want . Just pick up the right path from the yaml file.
+
+
+(53)sort namepsaces by name 
+	- kubectl get services --all-namespaces --sort-by=.metadata.name
+	- .metadata.name -> go to deployment.yaml and find 'name' under 'metadata'
+ 
+(54)Get info about cluster
+	- kubectl cluster-info
+
+(54)Get detailed info  about cluster 
+	- kubectl cluster-info dump
+
+(55)Get info( CPU usage ,memoryetc.)  about nodes 
+	- kubectl top node
+
+(56)Get info( CPU usage,memory etc.)  about podes 
+	- kubectl top pod
+
+
+(57)Get info( CPU usage,memory etc.)  about podes 
+	- kubectl top pod
+
+(58)Get namespaces
+	- kubectl get namespace
+	- kubectl get ns 
+
+(59)Get nodes
+	- kubectl get nodes
+	- kubectl get no 
+
+(60) Alternate method to get exteral apis via service :
+	- kubectl get service --watch
+
+(61) Get environment variable name:
+	- First get all services (kubectl get service)
+	- environment variable name = service name( replace all hyphens with underscores and change to CAPS)  + _SERVICE_HOST ( E.g CURRENCY_EXCHANGE_SERVICE_HOST)
+
+
+(62) How does currency conversion service know the location of currency exchange service :
+	- In the 00-configmap-currency-conversion.yaml within currency conversion service we are specifying this:
+		- CURRENCY_EXCHANGE_SERVICE_HOST: http://currency-exchange
+	- Essentially the environment variable name for currency exchange service  ( calculated as mentioned in step above) : http://currency-exchange 
+	- the http://currency-exchange  is derived from the application name.
+
+(63) Enable discovery of currency exchange service :
+	- One problem of above methid is that of the currency conversion service was launched before teh corrency echange srvice, it would not know the existence of currency-exchange service 
+	- Hence we have to enable a discoverer 
+	- This can be done by addign the environment configruation within the container section in the deployment.yaml file of currency-conversion service :
+	        env:
+          	- name: CURRENCY_EXCHANGE_SERVICE_HOST
+            	value: http://currency-exchange
+
+(64) Centralized configuration 
+	- Kubernates does thisthrough config maps 
+	- refer '00-configmap-currency-conversion.yaml' in c=unnrency-conversion-service folder
+
+(65) Apply config maps 
+	- kubecl apply -f "config-map-name".yaml
+
+
+(66) get config maps 
+	- kubectl get configmap
+	- kubectl get configmaps
+	- kubectl get configMaps
+
+(67) Describe config maps 
+	- kubectl describe configmap 'name of config map as beget fromget command above' 
+
+
+(68) Linking the config map to the deployment.yaml:
+	- Inside the deployment.yaml of currency-conversion, do :
+		- comment the currency-exchange-url and insert section as available under 'valueFrom' section in Containers.
+
+(69) Centralized load balancer uing nodepOrt and Ingress:
+	- In depolymentt.yaml change type ( section spec under Service) to NodePort( previosly LoadBalancer)
+	- This will expose a port in each of our nodes ( aka as pods which is a kind of virtual server)
+	- This node ports then need to be configured as an ingress 
+	- Refer ingress.yaml in the microservices folder
+	- Through Ingress we can route to mutiple services.
+	- Apply changes in ingress ( ie kubectl apply -f ingress.yaml)
+	- Creation of ingresses by kubectl takes a long time( 12-15 mins)
+	- The ingrress can be seen in gcp ui in the Services and Ingress section ( Under Kubernetes Engine)
+	- get the load balancer port from the Ingress details in gcp and access the urls as follows:
+		- if the load balancer port is 34.120.71.254 
+			- before currency conversion service url was : 34.84.244.233:8100/currency-conversion/from/EUR/to/INR/quantity/10
+			- with load balancer the conversion service url is : 34.120.71.254/currency-conversion/from/EUR/to/INR/quantity/10
+
+
+**************************
+docker run -p 8080:8080 in28min/hello-world-rest-api:0.0.1.RELEASE
+
+
+
+kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+kubectl scale deployment hello-world-rest-api --replicas=3
+kubectl delete pod hello-world-rest-api-58ff5dd898-62l9d
+kubectl autoscale deployment hello-world-rest-api --max=10 --cpu-percent=70
+kubectl edit deployment hello-world-rest-api #minReadySeconds: 15
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+
+gcloud container clusters get-credentials in28minutes-cluster --zone us-central1-a --project solid-course-258105
+kubectl create deployment hello-world-rest-api --image=in28min/hello-world-rest-api:0.0.1.RELEASE
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl get componentstatuses
+kubectl get pods --all-namespaces
+
+kubectl get events
+kubectl get pods
+kubectl get replicaset
+kubectl get deployment
+kubectl get service
+
+kubectl get pods -o wide
+
+kubectl explain pods
+kubectl get pods -o wide
+
+kubectl describe pod hello-world-rest-api-58ff5dd898-9trh2
+
+kubectl get replicasets
+kubectl get replicaset
+
+kubectl scale deployment hello-world-rest-api --replicas=3
+kubectl get pods
+kubectl get replicaset
+kubectl get events
+kubectl get events --sort.by=.metadata.creationTimestamp
+
+kubectl get rs
+kubectl get rs -o wide
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=DUMMY_IMAGE:TEST
+kubectl get rs -o wide
+kubectl get pods
+kubectl describe pod hello-world-rest-api-85995ddd5c-msjsm
+kubectl get events --sort-by=.metadata.creationTimestamp
+
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.2.RELEASE
+kubectl get events --sort-by=.metadata.creationTimestamp
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-n6c7l
+kubectl get pods -o wide
+kubectl delete pod hello-world-rest-api-67c79fd44f-8bhdt
+
+kubectl get componentstatuses
+kubectl get pods --all-namespaces
+
+gcloud auth login
+kubectl version
+gcloud container clusters get-credentials in28minutes-cluster --zone us-central1-a --project solid-course-258105
+
+kubectl rollout history deployment hello-world-rest-api
+kubectl set image deployment hello-world-rest-api hello-world-rest-api=in28min/hello-world-rest-api:0.0.3.RELEASE --record=true
+kubectl rollout undo deployment hello-world-rest-api --to-revision=1
+
+kubectl logs hello-world-rest-api-58ff5dd898-6ctr2
+kubectl logs -f hello-world-rest-api-58ff5dd898-6ctr2
+
+kubectl get deployment hello-world-rest-api -o yaml
+kubectl get deployment hello-world-rest-api -o yaml > deployment.yaml
+kubectl get service hello-world-rest-api -o yaml > service.yaml
+kubectl apply -f deployment.yaml
+kubectl get all -o wide
+kubectl delete all -l app=hello-world-rest-api
+
+kubectl get svc --watch
+kubectl diff -f deployment.yaml
+kubectl delete deployment hello-world-rest-api
+kubectl get all -o wide
+kubectl delete replicaset.apps/hello-world-rest-api-797dd4b5dc
+
+kubectl get pods --all-namespaces
+kubectl get pods --all-namespaces -l app=hello-world-rest-api
+kubectl get services --all-namespaces
+kubectl get services --all-namespaces --sort-by=.spec.type
+kubectl get services --all-namespaces --sort-by=.metadata.name
+kubectl cluster-info
+kubectl cluster-info dump
+kubectl top node
+kubectl top pod
+kubectl get services
+kubectl get svc
+kubectl get ev
+kubectl get rs
+kubectl get ns
+kubectl get nodes
+kubectl get no
+kubectl get pods
+kubectl get po
+
+kubectl delete all -l app=hello-world-rest-api
+kubectl get all
+
+kubectl apply -f deployment.yaml 
+kubectl apply -f ../currency-conversion/deployment.yaml 
