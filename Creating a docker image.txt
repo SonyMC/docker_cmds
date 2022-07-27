@@ -70,3 +70,14 @@
 	- execute command : docker build -t reponame/imagename:tag .
 		E.g.: docker build -t mailsonymathew/microservice-v1:0.0.1.RELEASE .
 
+(4) Manual create: 
+	- Run a container: 
+		- cmd:docker run -p 5000:5000 -d mailsonymathew/06-todo-rest-api-h2-containerized:1.0.0.RELEASE
+	- Exec into container and create a directory:
+		- cmd:docker exec -it 86ce01b20708 touch /tmp/execWorks
+		- cmd: docker exec -it 86ce01b20708 ls tmp
+		- cmd: docker exec -it 86ce01b20708 ls
+	- Commit the chages to create ne wimage:
+		- cmd: docker commit -m "message" 86ce01b20708 mailsonymathew/06-todo-rest-api-h2-containerized:2.0.0.RELEASE
+
+
