@@ -1,4 +1,4 @@
-To increase DOcker memory allocation in windows:
+settings.json
+C:\Users\DELL\AppData\Roaming\Docker
 
-- Create a .wslconfig file in C:\Users\DELL and specify limits
-- Sample .wslconfig file canbe found in 'D:\OneDrive\Study\DevOps\Docker commands'
+You can also set the memory used by docker by editing the json file C:\Users\Personal\AppData\Roaming\Docker\settings.json . Look for a property called MemoryMiB and update its value to be the number of megabytes you want your docker installation to use
