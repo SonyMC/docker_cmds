@@ -1,0 +1,4 @@
+To increase DOcker memory allocation in windows:
+
+- Create a .wslconfig file in C:\Users\DELL and specify limits
+- Sample .wslconfig file canbe found in 'D:\OneDrive\Study\DevOps\Docker commands'
