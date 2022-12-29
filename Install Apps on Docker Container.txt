@@ -1,0 +1,25 @@
+Install apps on Docker COntainer
+----------------------------------
+
+- Image used:
+	- For this demo we have used the kafka image landoop/fast-data-dev:latest 
+
+- Once container is up and running:
+
+	-Let's start a Powershell to all have linux commands usin gbash
+	
+		- cmd: docker run --rm -it --net=host landoop/fast-data-dev:latest bash
+
+	- Update apt-get
+		- cmd: apt-get update
+
+	- Install jq to pretty print json
+ 		- cmd: apt-get install -y jq
+
+	- Install maven and gradlle
+			- cmd: apt-get install -y maven
+			- cmd: apt-get install -y gradle
+
+	- Install zip and unzip
+			- cmd: apt-get install -y zip
+			- cmd: apt-get install -y unzip

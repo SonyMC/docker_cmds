@@ -1,0 +1,25 @@
+- Increase total memory allocated to Docker:
+-----------------------------------------
+settings.json
+C:\Users\DELL\AppData\Roaming\Docker
+
+You can also set the memory used by docker by editing the json file C:\Users\Personal\AppData\Roaming\Docker\settings.json . Look for a property called MemoryMiB and update its value to be the number of megabytes you want your docker installation to use
+
+
+
+- Increase Docker VM memory:
+------------------------------
+	- Open powershell in admin mode:
+		- cmd: wsl -d docker-desktop
+		- cmd: sysctl -w vm.max_map_count=262144
+		- cmd: exit
+
+			OR ( to set permenantly)
+	-  Open powershell in admin mode:
+		- cmd: wsl -d docker-desktop
+		- cmd: vi /etc/wsl.conf
+		- add these lines at the end:
+			[boot]
+			kernelCommandLine = "sysctl.vm.max_map_count=262144"
+		- quit VI : esc + type ':wq'
+		- Restart Docker Desktop
