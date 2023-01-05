@@ -6,7 +6,7 @@ Install apps on Docker COntainer
 
 - Once container is up and running:
 
-	-Let's start a Powershell to all have linux commands usin gbash
+	-Let's start a Powershell to all have linux commands using bash
 	
 		- cmd: docker run --rm -it --net=host landoop/fast-data-dev:latest bash
 
