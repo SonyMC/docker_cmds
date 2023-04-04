@@ -1,0 +1,2 @@
+login docker: docker login -u mailsonymathew
+token: dckr_pat_i-ZqXTkIfi3UWtTBiF_l75wdpeY
