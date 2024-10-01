@@ -1,6 +1,5 @@
 (1) Option 1 : From Sprign boot to create image:
-	
-	-   in pom.xml add teh following configuration to maven-plugin:
+	-   in pom.xml add teh following configuration to maven-plugin:( refer D:\OneDrive\Study\Java\Eclipse2020-03WorkplaceOct2020\currency-conversion-service-v3)
 	<build>
 		<plugins>
 			<plugin>
@@ -28,7 +27,6 @@
 
 
 (2) Option 2: Use Spotify Docker plugin 
-- Refer: - Refer: D:\OneDrive\Study\DevOps\AWS-Fargate\deploy-spring-microservices-to-aws-ecs-fargate-master\05-currency-conversion-service
 -   in pom.xml add teh following configuration to maven-plugin:
 	<build>
 		<plugins>
@@ -67,12 +65,48 @@
 	(b) Alternative to Second step:
 		- cmd prompt-> cd to project folder -> mvn clean package
 
-(3) Option 3 : From docker file:
+(3) Option 3 :
+	- Using google jib:
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- plugin for google jib -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.3</version>
+				<configuration>
+					<from>
+						<image>openjdk:22</image>
+					</from>
+					<to>
+						<image>docker.io/mailsonymathew/bookapp-testing-demo:1.0</image>
+						<auth>
+							<username>mailsonymathew</username>
+						</auth>
+					</to>
+				</configuration>
+			</plugin>
+		</plugins>
+
+    - IntellIj -> Maven -> Plugins -> jib -> jib:build
+            - You should see a message "Build Success" if imae is built successfully
+
+    - Go to Docker Hub: docker.io :
+            - You should be able to see your image 
+
+
+(4) Option 4 : From docker file:
 	- Create docker file 
 	- execute command : docker build -t reponame/imagename:tag .
 		E.g.: docker build -t mailsonymathew/microservice-v1:0.0.1.RELEASE .
 
-(4) Manual create: 
+
+(5) Manual create: 
 	- Run a container: 
 		- cmd:docker run -p 5000:5000 -d mailsonymathew/06-todo-rest-api-h2-containerized:1.0.0.RELEASE
 	- Exec into container and create a directory:
@@ -81,5 +115,4 @@
 		- cmd: docker exec -it 86ce01b20708 ls
 	- Commit the chages to create ne wimage:
 		- cmd: docker commit -m "message" 86ce01b20708 mailsonymathew/06-todo-rest-api-h2-containerized:2.0.0.RELEASE
-
 
