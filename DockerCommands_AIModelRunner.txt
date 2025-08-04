@@ -1,0 +1,53 @@
+Docker AI Model
+-----------------
+
+Refer : https://docs.docker.com/ai/model-runner/
+
+Advantages:
+	- built right into local desktop 
+	- no need to install NVIDIA CUDA or any other drivers
+	- you can pull models directly from Docker or Hugging Face and run them from the cmd line or from your containers and deploy genai applications very quick
+	- models themselves run on the host os ( i.e. not running on containers).
+		- this means these models get direct access to your system resources ( E.g. GPU, memory etc.). Hence you can utilize the max. performance if these models
+		- When you pull down a model, it is not packaged as container image . Instead it is downloaded as a model file and stored in your docker directory.
+	- models can intelligently use both your CPU and GPU dependant on what is available 
+	- benefit of this architecture is that you get the speed of native execution while keeping the simplicity of the Docker workflow
+	- Important thing t remember is that it runs on your host machine and not in a container ( Don't worry if you do not care bat this or do not get it!!!)
+
+Enable:
+	- Docker Desktop -> Settings -> Beta Features:
+		- Enable Docker Model Runner 
+			- Enable host-side TCP Support 
+				- This will be required to enable use to use it with something like our python code  
+
+				- Note: If you have a supported GPU, there will be an option to enable that ( "Enable GPU-backend inference)
+					
+					- In our case since we do not have it, ignore.
+
+
+- Note: you can also push models up and also package your own models
+
+
+
+
+cmds:
+----
+
+- docker model 
+	- Will show the list of available cmd 
+- docker model pull ai/<model name>
+	- E.g.: docker model pull ai/gemma3n:4B-F16
+	- Will pull the specified model
+
+- docker model list
+	- list models
+
+- docker model run ai/gemma3n
+	- Will run the specified model
+	- you can then start chatting with the model on the cmd life
+
+- ctrl+c 
+ or
+- /bye 
+
+	-exit chat

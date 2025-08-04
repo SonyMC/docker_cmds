@@ -3,7 +3,7 @@
 settings.json
 C:\Users\DELL\AppData\Roaming\Docker
 
-You can also set the memory used by docker by editing the json file C:\Users\Personal\AppData\Roaming\Docker\settings.json . Look for a property called MemoryMiB and update its value to be the number of megabytes you want your docker installation to use
+You can also set the memory used by docker by editing the json file C:\Users\Dell\AppData\Roaming\Docker\settings.json . Look for a property called MemoryMiB and update its value to be the number of megabytes you want your docker installation to use
 
 
 

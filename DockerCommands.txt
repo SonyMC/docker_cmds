@@ -1,13 +1,20 @@
+Projects folder:
+D:\OneDrive\Study\DevOps\Docker commands\projects
+
 (1) docker --version
-(2) docker run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
-    docker container run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
-    docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
-		//docker run --publish  localhost port : container port  image:release	-> command                               
+(2) docker run -p 5000:5000 mailsonymathew/hello-world-python:0.0.4.RELEASE
+		url: http://localhost:5000/hello-world
+    docker run -p 5000:5000 -d mailsonymathew/todo-rest-api-h2:1.0.0.RELEASE
+		url: http://localhost:5000/hello-world
+    docker run -p 5000:5000 -d mailsonymathew/06-todo-rest-api-h2-containerized:1.0.0.RELEASE   -> localhost:5000/hello-world-bean
+    docker container run -p mailsonymathew/hello-world-python:0.0.4.RELEASE
+    docker container run -d -p mailsonymathew/hello-world-python:0.0.4.RELEASE
+		//docker run --publish  {host port} : {container port}  image:release	-> command                               
                //downloads repository from   docker registry and runs image from docker hub which is a registory of  repostories.
                 //Static version of repository in our local machine is called an image.  Once it runs it becomes a container
 (3) View repository : https://hub.docker.com/r/in28min/hello-world-python
 
-(4) docker run -d -p 5000:5000 in28min/hello-world-nodejs:0.0.1.RELEASE
+(4) docker run -d -p 5000:5000 mailsonymathew/hello-world-nodejs:0.0.2.RELEASE
 	// launch containner in detached mode 
         // i.e even if we exit teh command prompt the container would remain running
 
@@ -85,7 +92,7 @@
 (23) docker system df
 	// show disk usage , no. of cotnainers, active state etc.
 
-(24) docker system events
+(24) docker events
 	// show events with containers 
 
 (25) docker system prune -a
@@ -106,7 +113,7 @@ WARNING! This will remove:
 (27) docker container run -p 5000:5000 -d -m 512m --cpu-quota=50000  in28min/hello-world-java:0.0.1.RELEASE
 	//start a container with max. of 512mb of memeory &  max. cpu usage of 50 %( here 100,000 means full CPU usage)
 
-(28) docker build -t in28min/hello-world-python:0.0.2.RELEASE .
+(28) 
     docker build -t mailsonymathew/hello-world-python:0.0.3.RELEASE .
     docker build -t mailsonymathew/hello-world-nodejs:0.0.1.RELEASE .
     docker build -t mailsonymathew/hello-world-java:0.0.1.RELEASE .	
@@ -115,7 +122,7 @@ WARNING! This will remove:
     docker build -t mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE .	
     docker build -t mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE .	
 	# build docker image
-        # -t -> is used tospecifyteh tag for the repository. Here this is in28min/hello-world-python:0.0.2.RELEASE
+        # -t -> is used tospecifyteh tag for the repository. 
         # '.' at teh end is imports and is the build context. Here we are saying use the current directory for build context as specified by the dot. Else we have to spcify teh full path of where the build direcltyr is.
 
 
@@ -137,8 +144,11 @@ WARNING! This will remove:
 	-> demo of difference btwn cmd and entry point in docker file. So if we append 'ping google.com' at end, if docker uses a command line it will tale preceedence over anthing typed before. But not so for entry point which is safer.
 	Hover command can be used if we for e.g want to use a cmd1.txt file at the end of teh command and which we can keep changing.For static cases hower, use entry point.
 
-(34) docker run -d -p 8000:8000 --name=currency-exchange mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE
-     docker run -d -p 8100:8100 --name=currency-conversion mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+(34) docker run -p 8000:8000 --name=currency-exchange mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE
+		- url: http://localhost:8000/currency-exchange/from/USD/to/INR
+     docker run -p 8100:8100 --name=currency-conversion mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+		- url = http://localhost:8100/currency-conversion/from/USD/to/INR/quantity/10
+			- Wil fail with whitelabel error. In teh cosole you will see :Connection refused (Connection refused) executing
      # here --name means we are specifiying the name of the name of the container
 
 (35)docker container rm currency-exchange
@@ -148,7 +158,7 @@ WARNING! This will remove:
 	#Will show all docker realted networks
         # Bridge netwrok - is teh default networkign mode in docker 
 	# Containers preset in default bridge n/w cannot directly talk to each other using localhost
-	# Another optionis to use the host n/w which we will doscuss further blow.
+	# Another optionis to use the host n/w which we will doscuss further below.
 
 (37)docker network inspect bridge
 	# Inspect the bridge network
@@ -156,7 +166,12 @@ WARNING! This will remove:
 (37)docker stop e345
 	# Shortcut for container stop
 
-(38)docker run -d -p 8100:8100 --env CURRENCY_EXCHANGE_SERVICE_HOST=http://currency-exchange --name=currency-conversion --link currency-exchange mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+(38) Linking 2 microservices:
+ docker run -p 8000:8000 --name=currency-exchange mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE
+		- url: http://localhost:8000/currency-exchange/from/USD/to/INR
+
+docker run -p 8100:8100 --env CURRENCY_EXCHANGE_SERVICE_HOST=http://currency-exchange --name=currency-conversion --link currency-exchange mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
+		- url: http://localhost:8100/currency-conversion/from/USD/to/INR/quantity/10
 	# Thsi command is used to enable services to talk to each other within the bridge newtork by specifying environment of connector service and link of connector container.
 	# This command will run teh currency conversion service create a link between within the currency conversion to the currency exchange service.
 	# The --env CURRENCY_EXCHANGE_SERVICE_HOST value specifies the container where the currency exchange service is found. Remeber that here we have to use teh container name to which we want to link and teh environment variable name should be the same as specified in the code . This env name and service name is specified as feign client in CurrencyExchangeServiceProxy.java in teh CurrencyExchange project as follows:
@@ -166,8 +181,8 @@ WARNING! This will remove:
        # Note : link is not the recommnede dopton. Refer below commands to see recommeneded approaach.
 
 (39) Host network:
-	# Instead of bridge netwrk we can use host n/w
-	# However,  The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for       Windows Server. Refer -> https://docs.docker.com/network/host/
+	# Instead of bridge network we can use host n/w
+	# However,  The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows, or Docker EE for  Windows Server. Refer -> https://docs.docker.com/network/host/
 	# Hence this is a good option only for Linux based servers and cloud.
 	# For our windows server, we will need to use a custom n/w
 
@@ -177,10 +192,12 @@ WARNING! This will remove:
 			
 	(2) #launch currency-exchange in the new network
 		docker run -d -p 8000:8000 --name=currency-exchange --network=currency-network mailsonymathew/currency-exchange-microservice-basic-java:0.0.1.RELEASE
+			- url: http://localhost:8000/currency-exchange/from/USD/to/INR
 	
 	(3)# launch currency-conversion in new network without specifying the link
  	docker run -d -p 8100:8100 --env CURRENCY_EXCHANGE_SERVICE_HOST=http://currency-exchange --name=currency-conversion --network=currency-network 	mailsonymathew/currency-coversion-microservice-basic-java:0.0.1.RELEASE
-
+			- url: http://localhost:8100/currency-conversion/from/USD/to/INR/quantity/10
+			
 (41) docker-compose --version
 	# Version of docker compose 
 
@@ -224,6 +241,66 @@ WARNING! This will remove:
 
 (51)docker-compose kill
 	# Will kill all containers.
+
+(52) Add a new tag t0 an image:
+	# docker tag -p 5000:5000 -d mailsonymathew/06-todo-rest-api-h2-containerized:1.0.0.RELEASE mailsonymathew/06-todo-rest-api-h2-containerized:LATEST
+
+(53) Restart container on Docker desktop restart:
+	#docker run -p 5000:5000 -d --restart=always in28min/todo-rest-api-h2:1.0.0.RELEASE
+	- default value of restart is no
+
+(54) Top proces in a container 
+	#docker top efg
+
+(55) Launch Zipkin server
+	# docker run -p 9411:9411 openzipkin/zipkin:2.23
+	- launch in browser : localhost:9411 
+
+(56) To create image:
+	(1)  in pom.xml add teh following configuration to maven-plugin:
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+<!--  maven plugin is also used to create an image for our container -->				
+				<configuration>
+					<image>
+						<name>mailsonymathew/mmv2-${project.artifactId}:${project.version}</name>
+					</image>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+				</configuration>				
+			</plugin>
+		</plugins>
+	</build>
+
+	
+	(2) Right click on projct -> Run as-> Maven Build:
+		- Goals = spring-boot:build-image -DskipTests  -> skip tests saves time
+				OR
+		  Goals =  spring-boot:build-image   -> use this in projects
+   
+	(3) Alternative to Second step:
+		- cmd prompt-> cd to project folder -> mvn spring-boot:build-image
+
+	(4) Run container for currency-exchange: 
+		- image name is 'docker.io/mailsonymathew/mmv2-currency-exchange-service-v2:0.0.1-SNAPSHOT' as can be seen in eclipse console after image build		
+		# cmd: docker run -p 8000:8000 docker.io/mailsonymathew/mmv2-currency-exchange-service-v2:0.0.1-SNAPSHOT
+
+(57) Runnign using Docker compose:
+	- Create docker.copose.yaml in D:\OneDrive\Study\Java\Eclipse2020-03WorkplaceOct2020\currency-exchange-service-v3
+	- open cmd pompt and cd inot folder:
+		- # cmd: docker-compose up
+
+
+(58) Stop all containers:
+	- Open powershell in admin mode:
+		- cmd: docker container stop $(docker container list -q)	
+
+(59) Get IP address of container:
+	- cmd:docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container name/id>
+                    - Will give ip address of container
+                     	
 
 docker --version
 docker run -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
@@ -321,3 +398,5 @@ docker push in28min/hello-world-python:0.0.1.RELEASE
  
 docker build -t in28min/hello-world-nodejs:0.0.1.RELEASE .
 docker push in28min/hello-world-nodejs:0.0.1.RELEASE
+
+
